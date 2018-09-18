@@ -57,7 +57,7 @@ class Shops(AbstractBaseUser):
 
 
 class Locals(models.Model):
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, to_field='shop_uuid') #related_name = shop_uuid
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, to_field='shop_uuid')
     name = models.CharField(max_length=50)
 
 

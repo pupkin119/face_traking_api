@@ -14,3 +14,9 @@ face_traking_api/__pycache__/
 .DS_Store
 shops/.DS_Store
 face_traking_api/.DS_Store
+
+face_api/__pycache__/
+face_api/migrations/__pycache__/
+face_traking_api/__pycache__/
+
+face_api/.DS_Store
