@@ -1,0 +1,126 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% load bootstrap3 %}
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+    <script type="text/javascript" src="{% static "js/index.js" %}"></script>
+
+</head>
+<body>
+
+<!-- header -->
+<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Face App</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i
+                            class="glyphicon glyphicon-user"></i> Shops <span class="caret"></span></a>
+                    <ul id="g-account-menu" class="dropdown-menu" role="menu">
+                        <li><a href="#">My Profile</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'shops:shop_logout' %}"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /container -->
+</div>
+<!-- /Header -->
+
+<!-- Main -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <!-- Left column -->
+            <a href="#"><strong><i class="glyphicon glyphicon-wrench"></i> Tools</strong></a>
+
+            <hr>
+
+            <ul class="nav nav-stacked">
+                <li class="nav-header"><a href="#" data-toggle="collapse" data-target="#userMenu">Settings <i
+                        class="glyphicon glyphicon-chevron-down"></i></a>
+                    <ul class="nav nav-stacked collapse in" id="userMenu">
+                        <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Info</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /col-3 -->
+        <div class="col-sm-9">
+            <a href="#"><strong><i class="glyphicon glyphicon-dashboard"></i>Shop List</strong></a>
+            <hr>
+
+            <div class="row">
+                <!-- center left-->
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Local Shops</h4></div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                                {% if locals_list %}
+                                    {% for local in locals_list %}
+                                        <a href="{% url 'shops:local_detail' local.id %}"
+                                           class="list-group-item ">{{ local.name }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="form-inline" action="{% url 'shops:local_create' %}" method="post">
+                        <label class="sr-only" for="inlineFormInputName2">Name</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2"
+                               placeholder="Local Name" name="local_name">
+
+{#                        <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>#}
+{#                        <div class="input-group mb-2 mr-sm-2">#}
+{#                            <div class="input-group-prepend">#}
+{#                                <div class="input-group-text">@</div>#}
+{#                            </div>#}
+{#                            <input type="text" class="form-control" id="inlineFormInputGroupUsername2"#}
+{#                                   placeholder="Username">#}
+{#                        </div>#}
+
+{#                        <div class="form-check mb-2 mr-sm-2">#}
+{#                            <input class="form-check-input" type="checkbox" id="inlineFormCheck">#}
+{#                            <label class="form-check-label" for="inlineFormCheck">#}
+{#                                Remember me#}
+{#                            </label>#}
+{#                        </div>#}
+
+                        <button type="submit" class="btn btn-primary mb-2">Add</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

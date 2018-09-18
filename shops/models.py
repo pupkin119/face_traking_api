@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 import uuid
 from django.utils import timezone
 from auditlog.registry import auditlog
-
+from django.contrib.auth.hashers import make_password
 
 class ShopManager(BaseUserManager):
     def create_shop(self, email, password=None):
@@ -13,9 +13,9 @@ class ShopManager(BaseUserManager):
             raise ValueError('Users must have an email address')
 
         user = self.model(
-            email=self.normalize_email(email),
+            email=self.normalize_email(email)
         )
-
+        user.shop_uuid = uuid.uuid4()
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -36,6 +36,12 @@ class Shops(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    #generate uniq uuid every time as Shop create
+    # def __init__(self):
+    #     super(Shops, self).__init__()
+    #     self.shop_uuid = uuid.uuid4()
+
+
     def __str__(self):
         return self.email
 
@@ -51,8 +57,8 @@ class Shops(AbstractBaseUser):
 
 
 class Locals(models.Model):
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, to_field='shop_uuid')
-    name = models.CharField(unique=True, max_length=50)
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, to_field='shop_uuid') #related_name = shop_uuid
+    name = models.CharField(max_length=50)
 
 
 class Faces(models.Model):
@@ -65,7 +71,7 @@ class Faces_in_shops(models.Model):
     shop = models.ForeignKey(Shops, on_delete=models.CASCADE, to_field='shop_uuid')
     face = models.ForeignKey(Faces, on_delete=models.CASCADE, to_field='id')
     local = models.ForeignKey(Locals, on_delete=models.CASCADE, to_field='id')
-    counts = models.IntegerField()
+    counts = models.IntegerField(default=1)
     time = models.DateTimeField(default=timezone.now())
 
 

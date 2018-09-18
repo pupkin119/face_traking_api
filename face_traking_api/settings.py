@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import psycopg2
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +33,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'bootstrap3',
     'shops.apps.ShopsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'auditlog',
+    'bootstrap3',
+    'rest_framework_swagger',
+    'templateaddons',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +56,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#EMAIL SETTINGS
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'faceappmailer@gmail.com'
+EMAIL_HOST_PASSWORD = 'Fuck_Off!'
+EMAIL_PORT = 587
 
 AUTH_USER_MODEL = 'shops.Shops'
 
@@ -73,6 +83,21 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+  'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+  ),
+}
+
+JWT_AUTH = {
+
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+
+}
 
 WSGI_APPLICATION = 'face_traking_api.wsgi.application'
 
@@ -135,3 +160,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'shops/static'), )
+
+SITE_URL = 'http://127.0.0.1:8000/'
