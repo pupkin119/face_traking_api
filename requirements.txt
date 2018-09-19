@@ -13,7 +13,7 @@ bleach==1.5.0
 certifi==2018.8.24
 cffi==1.10.0
 chardet==3.0.4
-conda==4.5.11
+conda==4.5.8
 constantly==15.1.0
 coreapi==2.3.3
 coreschema==0.0.4
