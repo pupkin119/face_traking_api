@@ -6,7 +6,7 @@ astor==0.6.2
 astroid==2.0
 attrs==17.4.0
 autobahn==18.3.1
-Automat==0.0.0
+automat==0.6.0
 backports.functools-lru-cache==1.5
 backports.weakref==1.0rc1
 bleach==1.5.0
