@@ -115,9 +115,20 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
+    # 'dynamic_data': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'face_traking_api_test',
+    #     'USER': 'developer',
+    #     # 'PASSWORD' : 'password',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5432',
+    #     'TEST': {
+    #         'NAME': 'auto_tests',
+    #     }
+    # },
 }
 
-
+TEST_NAME = 'auto_tests'
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
