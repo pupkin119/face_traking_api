@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import psycopg2
 import datetime
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,9 +26,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 't02fm6lzki#yel#w$cz+4j$n^8v6el@ic8_)##$*$#v1nuj-sq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
+#remove ALLOWED_HOSTS = [] in develope
+ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
 
 
 # Application definition
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 #EMAIL SETTINGS
@@ -106,27 +108,42 @@ WSGI_APPLICATION = 'face_traking_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+#development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'face_traking_api',
-        'USER': 'developer',
-        # 'PASSWORD' : 'password',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': 'face_traking',
+        'USER': 'name',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
     }
-    # 'dynamic_data': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'face_traking_api_test',
-    #     'USER': 'developer',
-    #     # 'PASSWORD' : 'password',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    #     'TEST': {
-    #         'NAME': 'auto_tests',
-    #     }
-    # },
 }
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'face_traking_api',
+#         'USER': 'developer',
+#         # 'PASSWORD' : 'password',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+#     # 'dynamic_data': {
+#     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     #     'NAME': 'face_traking_api_test',
+#     #     'USER': 'developer',
+#     #     # 'PASSWORD' : 'password',
+#     #     'HOST': '127.0.0.1',
+#     #     'PORT': '5432',
+#     #     'TEST': {
+#     #         'NAME': 'auto_tests',
+#     #     }
+#     # },
+# }
 
 TEST_NAME = 'auto_tests'
 # Password validation
@@ -176,3 +193,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'shops/static'), )
 
 SITE_URL = 'http://127.0.0.1:8000/'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

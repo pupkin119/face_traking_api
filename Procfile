@@ -1,0 +1,1 @@
+web: gunicorn face_traking_api.wsgi --log-file -
