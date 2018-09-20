@@ -16,3 +16,4 @@ django-bootstrap3==11.0.0
 whitenoise==4.1
 gunicorn==19.9.0
 django-templateaddons3==1.0
+argon2==0.1.10
