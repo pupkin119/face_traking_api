@@ -109,41 +109,44 @@ WSGI_APPLICATION = 'face_traking_api.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 ##development
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'face_traking',
-        'USER': 'name',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'face_traking_api',
-#         'USER': 'developer',
-#         # 'PASSWORD' : 'password',
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
+#         'NAME': 'face_traking',
+#         'USER': 'name',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '',
 #     }
-#     # 'dynamic_data': {
-#     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     #     'NAME': 'face_traking_api_test',
-#     #     'USER': 'developer',
-#     #     # 'PASSWORD' : 'password',
-#     #     'HOST': '127.0.0.1',
-#     #     'PORT': '5432',
-#     #     'TEST': {
-#     #         'NAME': 'auto_tests',
-#     #     }
-#     # },
 # }
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'face_traking_api',
+        'USER': 'developer',
+        # 'PASSWORD' : 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+    # 'dynamic_data': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'face_traking_api_test',
+    #     'USER': 'developer',
+    #     # 'PASSWORD' : 'password',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5432',
+    #     'TEST': {
+    #         'NAME': 'auto_tests',
+    #     }
+    # },
+}
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
+
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 TEST_NAME = 'auto_tests'
 # Password validation
