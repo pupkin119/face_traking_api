@@ -28,7 +28,7 @@ SECRET_KEY = 't02fm6lzki#yel#w$cz+4j$n^8v6el@ic8_)##$*$#v1nuj-sq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 #remove ALLOWED_HOSTS = [] in develope
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://sheltered-woodland-60678.herokuapp.com']
 
 
 # Application definition
