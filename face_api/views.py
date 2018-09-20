@@ -92,26 +92,26 @@ def schema_view(request):
 
 
 # API CREATE
-class CreateShopAPIView(APIView):
-    permission_classes = (AllowAny,)
-
-    def post(self, request):
-        user = request.data
-        serializer = ShopSerializer(data=user)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        active_token = PasswordResetTokenGenerator().make_token(Shops.objects.get(email=request.data['email']))
-
-        subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.data['email']
-        text_content = 'Confirmation of registration'
-        html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
-                       request.data['email'] + '">Confirm Registretion</a>'
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# class CreateShopAPIView(APIView):
+#     permission_classes = (AllowAny,)
+#
+#     def post(self, request):
+#         user = request.data
+#         serializer = ShopSerializer(data=user)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#
+#         active_token = PasswordResetTokenGenerator().make_token(Shops.objects.get(email=request.data['email']))
+#
+#         subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.data['email']
+#         text_content = 'Confirmation of registration'
+#         html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
+#                        request.data['email'] + '">Confirm Registretion</a>'
+#         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+#         msg.attach_alternative(html_content, "text/html")
+#         msg.send()
+#
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 ph = Argon2PasswordHasher()
