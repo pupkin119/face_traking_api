@@ -16,13 +16,13 @@ import numpy as np
 from scipy import spatial
 
 # read env
-import environ
+# import environ
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env('.env')
-print(env('SITE_URL'))
+# env = environ.Env(
+#     DEBUG=(bool, False)
+# )
+# environ.Env.read_env('.env')
+# print(env('SITE_URL'))
 
 # START SERVER
 faces = Faces.objects.all()
