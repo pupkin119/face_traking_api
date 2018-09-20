@@ -192,6 +192,10 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'shops/static'), )
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
 SITE_URL = 'http://127.0.0.1:8000/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
