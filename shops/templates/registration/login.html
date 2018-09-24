@@ -104,9 +104,19 @@
                     </div>
                 </div>
             </div>
+
+            {% if success %}
+            <div class="alert alert-success">{{ success }}</div>
+            {% endif %}
+
+            {% if info %}
+            <div class="alert alert-info">{{ info }}</div>
+            {% endif %}
+
             {% if errors %}
                 <div class="alert alert-danger" role="alert">{{ errors }}</div>
             {% endif %}
+
         </div>
     </div>
 </div>

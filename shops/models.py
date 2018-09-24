@@ -29,7 +29,7 @@ class Shops(AbstractBaseUser):
     )
     shop_uuid = models.UUIDField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=10)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     objects = ShopManager()
 

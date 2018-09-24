@@ -5,24 +5,27 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 import uuid
+from django.contrib.auth import authenticate, login, logout
 
 # MAILER
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
-# import numpy as np
-# # from django.utils import timezone
-# from scipy import spatial
-# # read env
-# import environ
-#
-# env = environ.Env(
-#     DEBUG=(bool, False)
-# )
-# environ.Env.read_env('.env')
-# print(env('SITE_URL'))
-#
+
+
+import numpy as np
+# from django.utils import timezone
+from scipy import spatial
+# read env
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env('.env')
+print(env('SITE_URL'))
+
 # # START SERVER
 # faces = Faces.objects.all()
 # disc = np.zeros((1, 128), dtype=np.float64)
@@ -282,14 +285,17 @@ def confirm(request):
         try:
             user = Shops.objects.get(email=request.GET['email'])
         except Shops.DoesNotExist:
-            return HttpResponse(' Shop does not exist !')
+            return render(request, 'registration/login.html', {'errors': 'Shop does not exist!'})
+            # return HttpResponse(' Shop does not exist !')
         else:
             if (PasswordResetTokenGenerator().check_token(user, request.GET['token'])):
                 user.is_active = True
                 user.save()
-                return HttpResponse(' Activated sucsess! ')
+                return render(request, 'registration/login.html', {'success': 'Sucsess activated!'})
+                # return HttpResponse(' Activated sucsess! ')
             else:
-                return HttpResponse(' Fail activate Shop! ')
+                return render(request, 'registration/login.html', {'errors': 'Fail activate Shop!'})
+                # return HttpResponse(' Fail activate Shop! ')
 
 
 def registration(request):
@@ -307,15 +313,26 @@ def create(request):
         except Shops.DoesNotExist:
             s = Shops.objects.create_shop(email=request.POST['email'], password=request.POST['password'])
             s.name = request.POST['shop_name']
-            s.shop_uuid = uuid.uuid4()
+            # s.shop_uuid = uuid.uuid4()
             s.save()
-            request.session['shop_uuid'] = str(s.shop_uuid)
-            return HttpResponseRedirect(reverse('shops:shop_index'))
+            active_token = PasswordResetTokenGenerator().make_token(s)
+
+            subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.POST['email']
+            text_content = 'Confirmation of registration'
+            html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
+                           request.POST['email'] + '">Confirm Registretion</a>'
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            # request.session['shop_uuid'] = str(s.shop_uuid)
+            # return HttpResponseRedirect(reverse('shops:shop_index'))
+            return render(request, 'registration/login.html', {'success': 'Shop success create',
+                                                               'info': 'Please confirm your email'})
         else:
             return render(request, 'registration/login.html', {'errors': "Shop already exist"})
 
 
-from django.contrib.auth import authenticate, login, logout
+
 
 
 @csrf_exempt
@@ -327,7 +344,8 @@ def log_in(request):
             request.session['shop_uuid'] = str(user.shop_uuid)
             return HttpResponseRedirect(reverse('shops:shop_index'))
         else:
-            return render(request, 'registration/login.html', {'errors': "Invalid email or password"})
+            return render(request, 'registration/login.html', {'errors': "Invalid email or password",
+                                                               'info': 'Check email to activate shop'})
 
 
 @csrf_exempt
@@ -381,7 +399,7 @@ def local_detail(request, local_id):
             else:
                 return render(request, 'shops/local_details.html', {'faces_in_shop': faces_in_shop})
         else:
-            return render(request, 'registration/login.html', {'errors': {'Please Sign in or Sign up'}})
+            return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})
 
     #
     # if request.method == 'POST':

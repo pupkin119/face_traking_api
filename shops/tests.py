@@ -1,9 +1,9 @@
-from django.test import TestCase, TransactionTestCase, SimpleTestCase
+from django.test import TestCase
 from shops.models import Shops, Locals, Faces
 import uuid
 
 
-class AnimalTestCase(TestCase):
+class ShopTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
