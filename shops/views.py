@@ -11,12 +11,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-
-
-
-import numpy as np
-# from django.utils import timezone
-from scipy import spatial
 # read env
 import environ
 
@@ -275,10 +269,6 @@ print(env('SITE_URL'))
 
 # ---------------------------------------------------------------------------------------------------
 
-def authKey(authKey):
-    # TODO
-    return 1
-
 @csrf_exempt
 def confirm(request):
     if request.method == 'GET':
@@ -370,13 +360,11 @@ def add_local(request):
             return HttpResponseRedirect(reverse('shops:shop_index'))
 
         except KeyError:
-            return HttpResponse('KEYERROR')
+            return render(request, 'shops/index.html', {'errors': 'KeyError'})
 
         else:
-            return HttpResponse('shit happens')
+            return render(request, 'shops/index.html', {'errors': 'Something go wrong'})
 
-
-# from django.template import loader
 @csrf_exempt
 def index(request):
     if request.method == 'GET':
@@ -400,83 +388,3 @@ def local_detail(request, local_id):
                 return render(request, 'shops/local_details.html', {'faces_in_shop': faces_in_shop})
         else:
             return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})
-
-    #
-    # if request.method == 'POST':
-    #     if not(authKey(request.POST['auth_key'])):
-    #         return JsonResponse({'error' : '10'})
-    #     face_landmarks = np.fromstring(temp.fromhex(request.POST['faces_landmark']), np.float64)
-    #     face_landmarks = face_landmarks.reshape((1, 128))
-    #     # print(face_landmarks)
-    #
-    #     global disc, tree, idArray
-    #
-    #     a = tree.query([face_landmarks])
-    #     # print(a[0][0])
-    #
-    #
-    #
-    #     print(disc.shape)
-    #
-    #     if a[0][0] > 0.5:
-    #
-    #         disc = np.concatenate((disc, face_landmarks), axis=0)
-    #         tree = spatial.KDTree(disc)
-    #         f = Faces()
-    #         f.landmarks = request.POST['faces_landmark']
-    #         f.save()
-    #
-    #         print(f)
-    #
-    #         idArray = np.append(idArray, f.id)
-    #
-    #         print(idArray)
-    #
-    #         f.faces_in_shops_set.create(counts = 0, local_id=2, shop_id = '008f320d-40ce-4aea-a73e-d37175a000d0')
-    #         # print('------------FACE CREATED--------------')
-    #         return JsonResponse({'errors': '0',
-    #                              'face_id': f.id,
-    #                              'counts': 0,
-    #                              'local_id': 2})
-    #
-    #     else:
-    #         # print(a[1][0])
-    #         # m = a[1][0]
-    #         # print(idArray[m])
-    #
-    #         fis = Faces_in_shops.objects.get(face_id = idArray[a[1][0]])
-    #         fis.counts = fis.counts + 1
-    #         fis.save()
-    #         return JsonResponse({'errors': '0',
-    #                              'face_id': fis.face_id,
-    #                              'counts': fis.counts,
-    #                              'local_id': fis.local_id})
-    #
-
-# @csrf_exempt
-# def show(request, user_id):
-#     if request.method == 'GET':
-#         # if not(authKey(request.GET['auth_key'])):
-#         #     return JsonResponse({'error':'10'})
-#         try:
-#             f = Faces.objects.get(id = user_id)
-#         except(Faces.DoesNotExist):
-#             return JsonResponse({'error': '20'})
-#         else:
-#             return JsonResponse({'error': '0',
-#                                  'landmark': f.landmarks,
-#                                  'created_at': f.created_at})
-#     return JsonResponse({'error': '0'})
-
-# @csrf_exempt
-# def destroy(request):
-#     if request.method == 'DELETE':
-#         # if not(authKey(request.DELETE['auth_key'])):
-#         #     return JsonResponse({'error': '10'})
-#         try:
-#             face = Faces.objects.get(id = request.GET['id'])
-#         except(Faces.DoesNotExist):
-#             return JsonResponse({'error': '20'})
-#         else:
-#             face.delete()
-#     return JsonResponse({'error': '0'})
