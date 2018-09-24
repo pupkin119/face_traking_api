@@ -79,42 +79,30 @@
                 <div class="col-md-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4>Local Shops</h4></div>
+                            <h4>Staff in shop</h4></div>
                         <div class="panel-body">
                             <div class="list-group">
-                                {% if locals_list %}
-                                    {% for local in locals_list %}
-                                        <a href="{% url 'shops:local_detail' local.id %}"
-                                           class="list-group-item ">{{ local.name }}</a>
+                                {% if staff_in_shop %}
+                                    {% for staff in staff_in_shop %}
+                                        <a href="{% url 'shops:staff_detail' staff.id %}"
+                                           class="list-group-item ">{{ staff.name }}</a>
                                     {% endfor %}
                                 {% endif %}
                             </div>
                         </div>
                     </div>
 
-                    <form class="form-inline" action="{% url 'shops:local_create' %}" method="post">
+                    <form class="form-inline" action="{% url 'shops:staff_create' %}" method="post">
                         <label class="sr-only" for="inlineFormInputName2">Name</label>
                         <input type="text" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2"
-                               placeholder="Local Name" name="local_name">
-
-{#                        <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>#}
-{#                        <div class="input-group mb-2 mr-sm-2">#}
-{#                            <div class="input-group-prepend">#}
-{#                                <div class="input-group-text">@</div>#}
-{#                            </div>#}
-{#                            <input type="text" class="form-control" id="inlineFormInputGroupUsername2"#}
-{#                                   placeholder="Username">#}
-{#                        </div>#}
-
-{#                        <div class="form-check mb-2 mr-sm-2">#}
-{#                            <input class="form-check-input" type="checkbox" id="inlineFormCheck">#}
-{#                            <label class="form-check-label" for="inlineFormCheck">#}
-{#                                Remember me#}
-{#                            </label>#}
-{#                        </div>#}
+                               placeholder="Staff Name" name="staff_name">
 
                         <button type="submit" class="btn btn-primary mb-2">Add</button>
                     </form>
+
+                    {% if errors %}
+                        <div class="alert alert-danger" role="alert">{{ errors }}</div>
+                    {% endif %}
 
                 </div>
             </div>

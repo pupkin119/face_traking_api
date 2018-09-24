@@ -13,6 +13,10 @@ urlpatterns = [
     path('locals', views.add_local, name = 'local_create'),
     path('log_in', views.log_in, name = 'shop_login'),
     path('shops/<int:local_id>', views.local_detail, name = 'local_detail'),
+    path('shops/staff', views.staff_index, name = 'staff_in_shops'),
+    path('shops/staff/<int:staff_id>', views.staff_detail, name = 'staff_detail'),
+    path('shops/staff/create', views.staff_create, name = 'staff_create'),
+
 
 
     # # Face_tracking_API

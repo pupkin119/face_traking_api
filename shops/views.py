@@ -1,5 +1,5 @@
 # from django.shortcuts import render
-from .models import Faces, Faces_in_shops, Locals, Shops
+from .models import Faces, Faces_in_shops, Locals, Shops, Staff, Staff_sell
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
@@ -386,5 +386,38 @@ def local_detail(request, local_id):
                 return render(request, 'shops/local_details.html', {'errors': 'There are no faces'})
             else:
                 return render(request, 'shops/local_details.html', {'faces_in_shop': faces_in_shop})
+        else:
+            return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})
+
+@csrf_exempt
+def staff_create(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            Staff.objects.create(shop_id = request.session['shop_uuid'], name=request.POST['staff_name'])
+            return HttpResponseRedirect (reverse('shops:staff_in_shops'))
+        else:
+            return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})
+
+
+def staff_index(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            staff_in_shop = Staff.objects.filter(shop_id = request.session['shop_uuid'])
+            if not(staff_in_shop.exists()):
+                return render(request, 'shops/staff_in_shops.html', {'errors': 'There are no stuff'})
+            else:
+                return render(request, 'shops/staff_in_shops.html', {'staff_in_shop': staff_in_shop})
+        else:
+            return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})
+
+
+def staff_detail(request, staff_id):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            staff_sell = Staff_sell.objects.filter(staff_id = staff_id)
+            if not(staff_sell.exists()):
+                return render(request, 'shops/staff_detail.html', {'errors': 'There are no sells'})
+            else:
+                return render(request, 'shops/staff_detail.html', {'staff_sell': staff_sell})
         else:
             return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})

@@ -73,9 +73,23 @@ class Faces_in_shops(models.Model):
     local = models.ForeignKey(Locals, on_delete=models.CASCADE, to_field='id')
     counts = models.IntegerField(default=1)
     time = models.DateTimeField(default=timezone.now())
+    cash = models.IntegerField(default=0, max_length=1000)
+
+
+class Staff(models.Model):
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, to_field='shop_uuid')
+    name = models.CharField(max_length=50)
+
+class Staff_sell(models.Model):
+    staff = models.ForeignKey(Staff, to_field='id', on_delete=models.CASCADE)
+    local = models.ForeignKey(Locals, to_field='id', on_delete=models.DO_NOTHING)
+    cash = models.IntegerField(null=False, blank=False)
+    timestamp = models.DateTimeField(default=timezone.now())
 
 
 auditlog.register(Faces)
 auditlog.register(Shops)
 auditlog.register(Locals)
 auditlog.register(Faces_in_shops)
+auditlog.register(Staff)
+auditlog.register(Staff_sell)

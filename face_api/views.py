@@ -172,7 +172,6 @@ def get_locals_list(request):
 @permission_classes([IsAuthenticated, ])
 def authenticate_face(request):
     try:
-
         shop_uuid = request.data['shop_uuid']
         local_id = request.data['local_id']
         faces_pl = request.data['faces_landmark']
@@ -195,24 +194,15 @@ def authenticate_face(request):
             f.save()
 
             idArray = np.append(idArray, f.id)
-            # print('------this is id array----------------')
-            # print(idArray)
             f.faces_in_shops_set.create(local_id=local_id, shop_id=shop_uuid)  # shop_id -> uuid
-            # print('------------FACE CREATED--------------')
             return Response({'errors': '0',
                                  'face_id': f.id,
                                  'counts': '1',
                                  'local_id': local_id}, status=status.HTTP_200_OK)
 
         else:
-            # print('------this is a[1][0]----------------')
-            # print(a[1][0])
-            # m = a[1][0]
-            # print('------this idArray[m]----------------')
-            # print(idArray[m])
             try:
                 fis = Faces_in_shops.objects.get(face_id=idArray[a[1][0]], local_id=local_id)
-            # TODO Shop_uuid
             except Faces_in_shops.DoesNotExist:
                 Faces_in_shops.objects.create(face_id=idArray[a[1][0]], local_id=local_id, shop_id=shop_uuid)
                 return Response({'errors': '0',
@@ -256,3 +246,4 @@ class ShopRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
