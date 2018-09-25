@@ -12,12 +12,12 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 # read env
-import environ
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env('.env')
+# import environ
+#
+# env = environ.Env(
+#     DEBUG=(bool, False)
+# )
+# environ.Env.read_env('.env')
 # print(env('SITE_URL'))
 
 # # START SERVER
@@ -287,6 +287,7 @@ def confirm(request):
                 return render(request, 'registration/login.html', {'errors': 'Fail activate Shop!'})
                 # return HttpResponse(' Fail activate Shop! ')
 
+
 @csrf_exempt
 def registration(request):
     if request.method == 'GET':
@@ -301,19 +302,19 @@ def create(request):
         try:
             s = Shops.objects.get(email=request.POST['email'])
         except Shops.DoesNotExist:
-            s = Shops.objects.create_shop(email=request.POST['email'], password=request.POST['password'])
+            s = Shops.objects.create_shop(email=request.POST['email'], password=request.POST['password'], is_active = True)
             s.name = request.POST['shop_name']
             # s.shop_uuid = uuid.uuid4()
             s.save()
-            active_token = PasswordResetTokenGenerator().make_token(s)
-
-            subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.POST['email']
-            text_content = 'Confirmation of registration'
-            html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
-                           request.POST['email'] + '">Confirm Registretion</a>'
-            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            # active_token = PasswordResetTokenGenerator().make_token(s)
+            #
+            # subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.POST['email']
+            # text_content = 'Confirmation of registration'
+            # html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
+            #                request.POST['email'] + '">Confirm Registretion</a>'
+            # msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            # msg.attach_alternative(html_content, "text/html")
+            # msg.send()
             # request.session['shop_uuid'] = str(s.shop_uuid)
             # return HttpResponseRedirect(reverse('shops:shop_index'))
             return render(request, 'registration/login.html', {'success': 'Shop success create',

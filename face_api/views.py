@@ -71,55 +71,55 @@ import coreschema
 from rest_framework.schemas import ManualSchema
 
 
-class SwaggerSchemaView(APIView):
-    permission_classes = [AllowAny]
-    renderer_classes = [
-        renderers.OpenAPIRenderer,
-        renderers.SwaggerUIRenderer
-    ]
-
-    def get(self, request):
-        generator = SchemaGenerator()
-        schema = generator.get_schema(request=request)
-        return Response(schema)
-
-
-@api_view()
-@renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
-def schema_view(request):
-    generator = schemas.SchemaGenerator(title='Pastebin API')
-    return response.Response(generator.get_schema(request=request))
+# class SwaggerSchemaView(APIView):
+#     permission_classes = [AllowAny]
+#     renderer_classes = [
+#         renderers.OpenAPIRenderer,
+#         renderers.SwaggerUIRenderer
+#     ]
+#
+#     def get(self, request):
+#         generator = SchemaGenerator()
+#         schema = generator.get_schema(request=request)
+#         return Response(schema)
+#
+#
+# @api_view()
+# @renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
+# def schema_view(request):
+#     generator = schemas.SchemaGenerator(title='Pastebin API')
+#     return response.Response(generator.get_schema(request=request))
 
 from rest_framework.schemas import AutoSchema
 
-
-# API CREATE
-class CreateShopAPIView(APIView):
-    permission_classes = [AllowAny]
-    renderer_classes = [
-        renderers.OpenAPIRenderer,
-        renderers.SwaggerUIRenderer
-    ]
-    def post(self, request):
-        user = request.data
-        serializer = ShopSerializer(data=user)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        active_token = PasswordResetTokenGenerator().make_token(Shops.objects.get(email=request.data['email']))
-
-        subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.data['email']
-        text_content = 'Confirmation of registration'
-        html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
-                       request.data['email'] + '">Confirm Registretion</a>'
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
-
-        # generator = SchemaGenerator()
-        # schema = generator.get_schema(request=request)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+#
+# # API CREATE
+# class CreateShopAPIView(APIView):
+#     permission_classes = [AllowAny]
+#     renderer_classes = [
+#         renderers.OpenAPIRenderer,
+#         renderers.SwaggerUIRenderer
+#     ]
+#     def post(self, request):
+#         user = request.data
+#         serializer = ShopSerializer(data=user)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#
+#         active_token = PasswordResetTokenGenerator().make_token(Shops.objects.get(email=request.data['email']))
+#
+#         subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.data['email']
+#         text_content = 'Confirmation of registration'
+#         html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
+#                        request.data['email'] + '">Confirm Registretion</a>'
+#         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+#         msg.attach_alternative(html_content, "text/html")
+#         msg.send()
+#
+#         # generator = SchemaGenerator()
+#         # schema = generator.get_schema(request=request)
+#
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 ph = Argon2PasswordHasher()

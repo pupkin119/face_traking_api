@@ -25,11 +25,11 @@ schema_view = get_swagger_view(title='My great API')
 
 urlpatterns = [
     #swagger
-    path('api/', schema_view),
+    path('', schema_view),
 
     path('admin/', admin.site.urls),
     #Views
-    path('', include('shops.urls')),
+    path('face_tracker', include('shops.urls')),
     #API
     path('v1/api/', include('face_api.urls')),
 ]
