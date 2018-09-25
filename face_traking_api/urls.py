@@ -29,7 +29,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     #Views
-    path('face_tracker', include('shops.urls')),
+    path('face_tracker/', include('shops.urls')),
     #API
     path('v1/api/', include('face_api.urls')),
 ]
