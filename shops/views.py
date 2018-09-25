@@ -18,7 +18,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 environ.Env.read_env('.env')
-print(env('SITE_URL'))
+# print(env('SITE_URL'))
 
 # # START SERVER
 # faces = Faces.objects.all()

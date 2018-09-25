@@ -22,7 +22,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 environ.Env.read_env('.env')
-print(env('SITE_URL'))
+# print(env('SITE_URL'))
 
 # START SERVER
 faces = Faces.objects.all()
@@ -281,7 +281,7 @@ def face_in_shop_detail(request):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny,])
+@permission_classes([IsAuthenticated,])
 def add_cash(request):
     try:
         local_id = request.data['local_id']
@@ -291,18 +291,18 @@ def add_cash(request):
 
         print(local_id, cash, face_id, staff_id)
 
-        # try:
-        #     f = Faces_in_shops.objects.get(face_id=face_id, local_id=local_id)
-        #     f.cash = f.cash + cash
-        #     f.save()
-        #
-        #     Staff_sell.objects.create(cash=cash, local_id=local_id, staff_id=staff_id)
-        #
-        #     return Response({'error': '0'},
-        #                     status=status.HTTP_200_OK)
-        # except Faces_in_shops.DoesNotExist:
-        #
-        #     return Response({'error': '0'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            f = Faces_in_shops.objects.get(face_id=face_id, local_id=local_id)
+            f.cash = f.cash + int(cash)
+            f.save()
+
+            Staff_sell.objects.create(cash=cash, local_id=local_id, staff_id=staff_id)
+
+            return Response({'error': '0'},
+                            status=status.HTTP_200_OK)
+
+        except Faces_in_shops.DoesNotExist:
+            return Response({'error': '0'}, status=status.HTTP_404_NOT_FOUND)
 
     except KeyError:
         # TODO add error!
