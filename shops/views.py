@@ -287,7 +287,7 @@ def confirm(request):
                 return render(request, 'registration/login.html', {'errors': 'Fail activate Shop!'})
                 # return HttpResponse(' Fail activate Shop! ')
 
-
+@csrf_exempt
 def registration(request):
     if request.method == 'GET':
         return render(request, 'registration/login.html')
