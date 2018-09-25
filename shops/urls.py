@@ -5,8 +5,9 @@ from . import views
 app_name = 'shops'
 
 urlpatterns = [
+    #account/registration/
     # path('accounts/', include('django.contrib.auth.urls'), name = 'shop_login'),
-    path('account/registration/', views.registration, name = 'shop_registration'),
+    path('', views.registration, name = 'shop_registration'),
     path('account/logout', views.log_out, name = 'shop_logout'),
     path('shops/', views.index, name = 'shop_index'),
     path('create/', views.create, name = 'shop_create'),
