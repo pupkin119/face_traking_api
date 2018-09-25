@@ -19,6 +19,7 @@ urlpatterns = [
 
 
 
+
     # # Face_tracking_API
     # path('create/', views.CreateShopAPIView.as_view()),
     path('confirm/', views.confirm, name = 'shop_confirm'),
@@ -30,4 +31,8 @@ urlpatterns = [
     # #swagger API
     # path('api/', views.schema_view),
     # # path('process/<int:user_id>', views.show, name = 'shop_destroy'),
+
+    #test
+    path('test/', views.test, name = 'test'),
+
 ]

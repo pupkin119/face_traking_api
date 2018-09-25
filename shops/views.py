@@ -421,3 +421,8 @@ def staff_detail(request, staff_id):
                 return render(request, 'shops/staff_detail.html', {'staff_sell': staff_sell})
         else:
             return render(request, 'registration/login.html', {'errors': 'Please Sign in or Sign up'})
+
+
+def test(request):
+    if request.method == 'GET':
+        return render(request, 'shops/graphic.html')

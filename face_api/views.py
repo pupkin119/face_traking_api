@@ -1,5 +1,5 @@
 # from django.shortcuts import render
-from shops.models import Faces, Faces_in_shops, Locals, Shops
+from shops.models import Faces, Faces_in_shops, Locals, Shops, Staff_sell
 from django.http import JsonResponse
 
 from rest_framework_jwt.serializers import jwt_payload_handler
@@ -16,13 +16,13 @@ import numpy as np
 from scipy import spatial
 
 # read env
-# import environ
+import environ
 
-# env = environ.Env(
-#     DEBUG=(bool, False)
-# )
-# environ.Env.read_env('.env')
-# print(env('SITE_URL'))
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env('.env')
+print(env('SITE_URL'))
 
 # START SERVER
 faces = Faces.objects.all()
@@ -52,7 +52,7 @@ print('                SERVER START                ')
 print('--------------------------------------------')
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import ShopSerializer, LocalsSerializer
+from .serializers import ShopSerializer, LocalsSerializer, FacesInShopDetailSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -71,50 +71,59 @@ import coreschema
 from rest_framework.schemas import ManualSchema
 
 
-# class SwaggerSchemaView(APIView):
-#     permission_classes = [AllowAny]
-#     renderer_classes = [
-#         renderers.OpenAPIRenderer,
-#         renderers.SwaggerUIRenderer
-#     ]
-#
-#     def get(self, request):
-#         generator = SchemaGenerator()
-#         schema = generator.get_schema(request=request)
-#         return Response(schema)
-#
-#
-# @api_view()
-# @renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
-# def schema_view(request):
-#     generator = schemas.SchemaGenerator(title='Pastebin API')
-#     return response.Response(generator.get_schema(request=request))
+class SwaggerSchemaView(APIView):
+    permission_classes = [AllowAny]
+    renderer_classes = [
+        renderers.OpenAPIRenderer,
+        renderers.SwaggerUIRenderer
+    ]
+
+    def get(self, request):
+        generator = SchemaGenerator()
+        schema = generator.get_schema(request=request)
+        return Response(schema)
+
+
+@api_view()
+@renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(title='Pastebin API')
+    return response.Response(generator.get_schema(request=request))
+
+from rest_framework.schemas import AutoSchema
 
 
 # API CREATE
-# class CreateShopAPIView(APIView):
-#     permission_classes = (AllowAny,)
-#
-#     def post(self, request):
-#         user = request.data
-#         serializer = ShopSerializer(data=user)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#
-#         active_token = PasswordResetTokenGenerator().make_token(Shops.objects.get(email=request.data['email']))
-#
-#         subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.data['email']
-#         text_content = 'Confirmation of registration'
-#         html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
-#                        request.data['email'] + '">Confirm Registretion</a>'
-#         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-#         msg.attach_alternative(html_content, "text/html")
-#         msg.send()
-#
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+class CreateShopAPIView(APIView):
+    permission_classes = [AllowAny]
+    renderer_classes = [
+        renderers.OpenAPIRenderer,
+        renderers.SwaggerUIRenderer
+    ]
+    def post(self, request):
+        user = request.data
+        serializer = ShopSerializer(data=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        active_token = PasswordResetTokenGenerator().make_token(Shops.objects.get(email=request.data['email']))
+
+        subject, from_email, to = 'confirm your email', 'faceappmailer@gmail.com', request.data['email']
+        text_content = 'Confirmation of registration'
+        html_content = '<a href="' + env('SITE_URL') + '/face_tracking/confirm?token=' + str(active_token) + '&email=' + \
+                       request.data['email'] + '">Confirm Registretion</a>'
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+        # generator = SchemaGenerator()
+        # schema = generator.get_schema(request=request)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 ph = Argon2PasswordHasher()
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
@@ -169,7 +178,7 @@ def get_locals_list(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated, ])
+@permission_classes([AllowAny, ])
 def authenticate_face(request):
     try:
         shop_uuid = request.data['shop_uuid']
@@ -196,9 +205,9 @@ def authenticate_face(request):
             idArray = np.append(idArray, f.id)
             f.faces_in_shops_set.create(local_id=local_id, shop_id=shop_uuid)  # shop_id -> uuid
             return Response({'errors': '0',
-                                 'face_id': f.id,
-                                 'counts': '1',
-                                 'local_id': local_id}, status=status.HTTP_200_OK)
+                             'face_id': f.id,
+                             'counts': '1',
+                             'local_id': local_id}, status=status.HTTP_200_OK)
 
         else:
             try:
@@ -247,3 +256,54 @@ class ShopRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# STAFF
+
+@api_view(['POST'])
+@permission_classes([AllowAny,])
+def face_in_shop_detail(request):
+    try:
+        # local_id = request.data['local_id']
+        face_id = request.data['face_id']
+
+        fis = Faces_in_shops.objects.filter(face_id = face_id)
+        print(fis.count())
+
+        if not(fis.exists()):
+            return Response({'error': '10'}, status = status.HTTP_404_NOT_FOUND)
+
+        else:
+            serializer = FacesInShopDetailSerializer(fis, many=True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+    except KeyError:
+        # TODO add error!
+        return Response({'error': '1'}, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny,])
+def add_cash(request):
+    try:
+        local_id = request.data['local_id']
+        cash = request.data['cash']
+        face_id = request.data['face_id']
+        staff_id = request.data['staff_id']
+
+        print(local_id, cash, face_id, staff_id)
+
+        # try:
+        #     f = Faces_in_shops.objects.get(face_id=face_id, local_id=local_id)
+        #     f.cash = f.cash + cash
+        #     f.save()
+        #
+        #     Staff_sell.objects.create(cash=cash, local_id=local_id, staff_id=staff_id)
+        #
+        #     return Response({'error': '0'},
+        #                     status=status.HTTP_200_OK)
+        # except Faces_in_shops.DoesNotExist:
+        #
+        #     return Response({'error': '0'}, status=status.HTTP_404_NOT_FOUND)
+
+    except KeyError:
+        # TODO add error!
+        return Response({'error': '1'}, status.HTTP_400_BAD_REQUEST)

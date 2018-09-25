@@ -29,3 +29,8 @@ class LocalsSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Locals
         fields = ('id', 'name')
+
+class FacesInShopDetailSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = Faces_in_shops
+        fields = ('face_id', 'local_id', 'counts', 'time')
